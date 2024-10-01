@@ -3,6 +3,7 @@ This system allows you to manage competitions, students, admins, and competition
 
 Installation:
 pip install -r requirements.txt
+You may need to activate the virtual environment.
 
 Available CLI Commands:
 
