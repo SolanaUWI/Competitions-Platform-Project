@@ -1,0 +1,20 @@
+resultID,competitionID,studentID,score,completionTime,ranking,name,date,status
+R007,C005,S013,86,02:00:00,14,Coding Challenge Series 3,2024-09-28,Completed
+R001,C001,S001,98,01:30:00,1,Coding Hackathon 2024,2024-09-30,Completed
+R018,C006,S017,82,01:45:00,17,Data Structures Showdown,2024-09-25,Completed
+R003,C009,S003,96,02:00:00,3,Algorithms Contest 2024,2024-09-30,Completed
+R014,C010,S014,85,02:15:00,15,Coding Quest 2024,2024-09-28,Completed
+R019,C011,S019,80,01:55:00,19,Coding Game Jam,2024-09-30,Completed
+R009,C012,S009,90,01:50:00,9,Coding Challenge Series 1,2024-09-15,Completed
+R017,C013,S018,81,01:50:00,18,Coding Challenge Series 2,2024-09-25,Completed
+R008,C014,S008,91,01:25:00,8,Code Sprint 2024,2024-09-20,Completed
+R015,C015,S015,84,02:30:00,16,Debugging Marathon,2024-09-28,Completed
+R002,C016,S002,97,01:45:00,2,Coding Hackathon 2024,2024-09-30,Completed
+R016,C017,S016,83,01:15:00,16,Competitive Programming League,2024-09-25,Completed
+R005,C018,S005,94,01:55:00,5,Coding Challenge Series 1,2024-09-15,Completed
+R011,C019,S011,88,01:55:00,11,Code Golf Challenge,2024-09-20,Completed
+R006,C020,S006,93,02:10:00,6,Algorithms Contest 2024,2024-09-30,Completed
+R012,C021,S012,87,02:05:00,12,Coding Quest 2024,2024-09-28,Completed
+R013,C022,S004,95,01:40:00,4,Coding Challenge Series 3,2024-09-28,Completed
+R010,C023,S010,89,01:35:00,10,Coding Game Jam,2024-09-30,Completed
+R020,C024,S020,79,02:05:00,20,Coding Challenge Series 2,2024-09-25,Completed
