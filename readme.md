@@ -1,5 +1,6 @@
 Competition Platform CLI system:
 This system allows you to manage competitions, students, admins, and competition results via a command-line interface (CLI) using Flask commands.
+For readability look at the readme in code mode.
 
 Installation:
 -pip install -r requirements.txt
