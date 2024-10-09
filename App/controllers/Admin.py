@@ -74,7 +74,7 @@ def update_competition_details(competition_id, **kwargs):
     db.session.commit()
     print(f"Competition {competition_id} updated successfully.")
 
-#Function to import results from a CSV file
+# Function to import results from a CSV file and create students
 def import_results_from_file(file_path):
     try:
         with open(file_path, newline='') as csvfile:
@@ -88,10 +88,24 @@ def import_results_from_file(file_path):
 
                 competition_id = row['competitionID']
                 student_id = row['studentID']
+                first_name = row['firstName']
+                last_name = row['lastName']
+                email = row['email']
                 score = int(row['score'])
                 completion_time = row['completionTime']
                 ranking = int(row['ranking'])
                 competition_date = row['date']  
+
+                student = db.session.query(Student).filter_by(studentID=student_id).first()
+                if student is None:
+                    student = Student(
+                        studentID=student_id,
+                        firstName=first_name,
+                        lastName=last_name,
+                        email=email
+                    )
+                    db.session.add(student)
+                    print(f"Created new student with ID: {student_id}")
 
                 competition = db.session.query(Competition).filter_by(competitionID=competition_id).first()
                 if competition is None:
