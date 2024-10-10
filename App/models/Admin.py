@@ -8,7 +8,7 @@ class Admin(User):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Foreign key relationship
 
     def __init__(self, username, password, firstName, lastName, email):
-        super().__init__(username, password, user_type="admin", first_name=first_name, last_name=last_name, email=email)
+        super().__init__(username, password, user_type="admin", firstName=firstName, lastName=lastName, email=email)
         
     def __repr__(self):
         return f'<Admin {self.adminID}>'

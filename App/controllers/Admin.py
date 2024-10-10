@@ -7,7 +7,7 @@ from App.models import Results
 from App.models import db 
 
 #Function to create an admin
-def create_admin(first_name, last_name, email):
+def create_admin(username, password, first_name, last_name, email):
     existing_admin = Admin.query.filter_by(email=email).first()
     if existing_admin:
         raise ValueError(f"An admin with email '{email}' already exists.")
@@ -15,9 +15,11 @@ def create_admin(first_name, last_name, email):
     admin_id = f"A{len(Admin.query.all()) + 1:03d}"
     
     new_admin = Admin(
-        adminID=admin_id,
+        #adminID=admin_id, #removed adminID
         firstName=first_name,
         lastName=last_name,
+        username = username,
+        password = password,
         email=email
     )
     
