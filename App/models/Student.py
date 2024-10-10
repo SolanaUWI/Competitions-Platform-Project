@@ -1,13 +1,13 @@
 from App.database import db
 from uuid import uuid4
-
-class Student(db.Model):
-    __tablename__ = 'students'
+from App.models import User
+class Student(User):
+    __tablename__ = 'student'
     
     studentID = db.Column(db.String, primary_key=True, default=lambda: f"S{uuid4().hex[:4].upper()}") 
-    firstName = db.Column(db.String(100), nullable=False)
-    lastName = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Foreign key relationship
+    def __init__(self, username, password, firstName, lastName, email):
+        super().__init__(username, password, user_type="student", first_name=first_name, last_name=last_name, email=email)
 
     competitions = db.relationship('Competition', secondary='competition_participants', back_populates='participants')
 
@@ -21,3 +21,7 @@ class Student(db.Model):
             'lastName': self.lastName,
             'email': self.email
         }
+
+    __mapper_args__ = {
+        "polymorphic_identity": "student",  
+    }

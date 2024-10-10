@@ -8,7 +8,7 @@ def create_student(first_name, last_name, email):
     student_id = f"S{len(Student.query.all()) + 1:03d}"
     
     new_student = Student(
-        studentID=student_id,
+        #studenID removed
         firstName=first_name,
         lastName=last_name,
         email=email
