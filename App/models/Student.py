@@ -7,7 +7,7 @@ class Student(User):
     studentID = db.Column(db.String, primary_key=True, default=lambda: f"S{uuid4().hex[:4].upper()}") 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Foreign key relationship
     def __init__(self, username, password, firstName, lastName, email):
-        super().__init__(username, password, user_type="student", first_name=first_name, last_name=last_name, email=email)
+        super().__init__(username, password, user_type="student", firstName=firstName, lastName=lastName, email=email)
 
     competitions = db.relationship('Competition', secondary='competition_participants', back_populates='participants')
 

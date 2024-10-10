@@ -4,11 +4,13 @@ from App.models import Results
 from App.models import db
 
 #Function for creating a student
-def create_student(first_name, last_name, email):
+def create_student(username, password, first_name, last_name, email):
     student_id = f"S{len(Student.query.all()) + 1:03d}"
     
     new_student = Student(
         #studenID removed
+        username = username,
+        password = password,
         firstName=first_name,
         lastName=last_name,
         email=email

@@ -26,11 +26,13 @@ student_cli = AppGroup('student', help='Student object commands')
 
 #Command to create a student
 @student_cli.command("create", help="Creates a student")
+@click.argument("username")
+@click.argument("password")
 @click.argument("first_name")
 @click.argument("last_name")
 @click.argument("email")
-def create_student_command(first_name, last_name, email):
-    student_id = create_student(first_name, last_name, email)
+def create_student_command(username,password,first_name, last_name, email):
+    student_id = create_student(username,password,first_name, last_name, email)
     print(f'Student {first_name} {last_name} created with ID {student_id}')
 
 #Command to list all students
@@ -66,11 +68,13 @@ admin_cli = AppGroup('admin', help='Admin object commands')
 
 #Command to create an admin
 @admin_cli.command("create", help="Creates an admin")
+@click.argument("username")
+@click.argument("password")
 @click.argument("first_name")
 @click.argument("last_name")
 @click.argument("email")
-def create_admin_command(first_name, last_name, email):
-    admin_id = create_admin(first_name, last_name, email)
+def create_admin_command(username,password,first_name, last_name, email):
+    admin_id = create_admin(username,password,first_name, last_name, email)
     print(f'Admin {first_name} {last_name} created with ID {admin_id}')
 
 #Command to list all admins
