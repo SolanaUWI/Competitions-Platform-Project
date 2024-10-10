@@ -1,11 +1,24 @@
 from App.models import User
 from App.database import db
 
-def create_user(username, password):
-    newuser = User(username=username, password=password)
-    db.session.add(newuser)
+# def create_user(username, password):
+#     newuser = User(username=username, password=password)
+#     db.session.add(newuser)
+#     db.session.commit()
+#     return newuser
+
+def create_user(username, password, firstName, lastName, email):
+    new_user = User(
+        username=username,
+        password=password,  # Ensure you hash the password as needed
+        user_type='user',  # Set the default user type
+        firstName=firstName,  # Pass the first name
+        lastName=lastName,  # Pass the last name
+        email=email  # Pass the email
+    )
+    db.session.add(new_user)
     db.session.commit()
-    return newuser
+    return new_user
 
 def get_user_by_username(username):
     return User.query.filter_by(username=username).first()

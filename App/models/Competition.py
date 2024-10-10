@@ -1,7 +1,9 @@
 from App.database import db
 
-competition_participants = db.Table('competition_participants',
-    db.Column('student_id', db.String, db.ForeignKey('students.studentID'), primary_key=True),
+# Association table for students participating in competitions
+competition_participants = db.Table(
+    'competition_participants',
+    db.Column('student_id', db.String, db.ForeignKey('student.studentID'), primary_key=True),
     db.Column('competition_id', db.String, db.ForeignKey('competitions.competitionID'), primary_key=True)
 )
 
@@ -12,13 +14,14 @@ class Competition(db.Model):
     date = db.Column(db.Date, nullable=False)
     description = db.Column(db.String, nullable=True)
     competitionType = db.Column(db.String, nullable=False)
-    adminID = db.Column(db.String, nullable=True)
+    adminID = db.Column(db.String, db.ForeignKey('admin.adminID'), nullable=True)  # Reference Admin ID
 
-    participants = db.relationship('Student', secondary='competition_participants', back_populates='competitions')
+    # Relationship with Student model
+    participants = db.relationship('Student', secondary=competition_participants, back_populates='competitions')
 
     def __repr__(self):
         return f'<Competition {self.competitionID}>'
-    
+
     def to_dict(self):
         return {
             'competitionID': self.competitionID,
