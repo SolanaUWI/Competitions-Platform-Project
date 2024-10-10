@@ -26,11 +26,13 @@ student_cli = AppGroup('student', help='Student object commands')
 
 #Command to create a student
 @student_cli.command("create", help="Creates a student")
+@click.argument("username")
+@click.argument("password")
 @click.argument("first_name")
 @click.argument("last_name")
 @click.argument("email")
-def create_student_command(first_name, last_name, email):
-    student_id = create_student(first_name, last_name, email)
+def create_student_command(username,password,first_name, last_name, email):
+    student_id = create_student(username,password,first_name, last_name, email)
     print(f'Student {first_name} {last_name} created with ID {student_id}')
 
 #Command to list all students
@@ -66,11 +68,13 @@ admin_cli = AppGroup('admin', help='Admin object commands')
 
 #Command to create an admin
 @admin_cli.command("create", help="Creates an admin")
+@click.argument("username")
+@click.argument("password")
 @click.argument("first_name")
 @click.argument("last_name")
 @click.argument("email")
-def create_admin_command(first_name, last_name, email):
-    admin_id = create_admin(first_name, last_name, email)
+def create_admin_command(username,password,first_name, last_name, email):
+    admin_id = create_admin(username,password,first_name, last_name, email)
     print(f'Admin {first_name} {last_name} created with ID {admin_id}')
 
 #Command to list all admins
@@ -90,15 +94,20 @@ def list_admins_command(format):
 def import_results_command(file_path):
     import_results_from_file(file_path)
 
-#Command to create a competition
+# Command to create a competition
 @admin_cli.command("createCompetition", help="Creates a competition")
 @click.argument("name")
 @click.argument("date")
 @click.argument("status")
 @click.argument("description")
-def create_competition_command(name, date, status, description):
-    competition_id = create_competition(name, date, status, description)
-    print(f'Competition {name} created with ID {competition_id}')
+@click.argument("admin_id")
+def create_competition_command(name, date, status, description, admin_id):
+    try:
+        competition_id = create_competition(name, date, status, description, admin_id)
+        print(f'Competition {name} created with ID {competition_id}')
+    except Exception as e:
+        print(f'Error creating competition: {e}')
+
 
 #Command to Update details of a competition
 @admin_cli.command("update_competition", help="Updates a competition in the database")
