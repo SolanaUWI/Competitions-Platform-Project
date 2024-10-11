@@ -5,11 +5,7 @@ from App.controllers import Student
 from App.models import Admin, Competition, Results
 from App.models import db
 
-<<<<<<< HEAD
-#Function to create an admin
-=======
 # Function to create an admin
->>>>>>> upstream/master
 def create_admin(username, password, first_name, last_name, email):
     existing_admin = Admin.query.filter_by(email=email).first()
     if existing_admin:
@@ -25,21 +21,12 @@ def create_admin(username, password, first_name, last_name, email):
     
 
     new_admin = Admin(
-<<<<<<< HEAD
-        #adminID=admin_id, #removed adminID
-        firstName=first_name,
-        lastName=last_name,
-        username = username,
-        password = password,
-        email=email
-=======
         username=username,
         password=password,
         firstName=first_name,
         lastName=last_name,
         email=email,
         adminID=admin_id
->>>>>>> upstream/master
     )
     
     db.session.add(new_admin)
