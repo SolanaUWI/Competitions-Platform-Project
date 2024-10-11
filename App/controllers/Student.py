@@ -8,14 +8,8 @@ def create_student(username, password, first_name, last_name, email):
     student_id = f"S{len(Student.query.all()) + 1:03d}"
     
     new_student = Student(
-<<<<<<< HEAD
-        #studenID removed
-        username = username,
-        password = password,
-=======
         username=username,
         password=password,
->>>>>>> upstream/master
         firstName=first_name,
         lastName=last_name,
         email=email,
