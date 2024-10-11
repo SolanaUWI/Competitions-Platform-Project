@@ -8,18 +8,25 @@ def create_student(username, password, first_name, last_name, email):
     student_id = f"S{len(Student.query.all()) + 1:03d}"
     
     new_student = Student(
+<<<<<<< HEAD
         #studenID removed
         username = username,
         password = password,
+=======
+        username=username,
+        password=password,
+>>>>>>> upstream/master
         firstName=first_name,
         lastName=last_name,
-        email=email
+        email=email,
+        studentID=student_id  # Pass the student ID to the constructor
     )
 
     db.session.add(new_student)
     db.session.commit()
     
     return student_id
+
 
 #Function for viewing all students
 def get_all_students():
@@ -42,7 +49,8 @@ def view_results(student_id):
 
 #Function for registering a student for a competition
 def register_for_competition(student_id, competition_id):
-    student = Student.query.get(student_id)
+    # Query using the studentID instead of primary key
+    student = Student.query.filter_by(studentID=student_id).first()
     competition = Competition.query.get(competition_id)
 
     if student is None:
@@ -58,3 +66,4 @@ def register_for_competition(student_id, competition_id):
         print(f"Student {student_id} registered for competition {competition_id}.")
     else:
         print(f"Student {student_id} is already registered for competition {competition_id}.")
+

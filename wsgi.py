@@ -94,15 +94,20 @@ def list_admins_command(format):
 def import_results_command(file_path):
     import_results_from_file(file_path)
 
-#Command to create a competition
+# Command to create a competition
 @admin_cli.command("createCompetition", help="Creates a competition")
 @click.argument("name")
 @click.argument("date")
 @click.argument("status")
 @click.argument("description")
-def create_competition_command(name, date, status, description):
-    competition_id = create_competition(name, date, status, description)
-    print(f'Competition {name} created with ID {competition_id}')
+@click.argument("admin_id")
+def create_competition_command(name, date, status, description, admin_id):
+    try:
+        competition_id = create_competition(name, date, status, description, admin_id)
+        print(f'Competition {name} created with ID {competition_id}')
+    except Exception as e:
+        print(f'Error creating competition: {e}')
+
 
 #Command to Update details of a competition
 @admin_cli.command("update_competition", help="Updates a competition in the database")

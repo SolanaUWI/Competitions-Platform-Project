@@ -1,26 +1,45 @@
 import csv
 from datetime import datetime
 from sqlalchemy import func
-from App.models import Admin
-from App.models import Competition 
-from App.models import Results
-from App.models import db 
+from App.controllers import Student
+from App.models import Admin, Competition, Results
+from App.models import db
 
+<<<<<<< HEAD
 #Function to create an admin
+=======
+# Function to create an admin
+>>>>>>> upstream/master
 def create_admin(username, password, first_name, last_name, email):
     existing_admin = Admin.query.filter_by(email=email).first()
     if existing_admin:
         raise ValueError(f"An admin with email '{email}' already exists.")
     
-    admin_id = f"A{len(Admin.query.all()) + 1:03d}"
+    max_admin_id = db.session.query(func.max(Admin.adminID)).scalar()
+    if max_admin_id is None:
+        new_admin_id_number = 1
+    else:
+        new_admin_id_number = int(max_admin_id[1:]) + 1
     
+    admin_id = f"A{new_admin_id_number:03d}" 
+    
+
     new_admin = Admin(
+<<<<<<< HEAD
         #adminID=admin_id, #removed adminID
         firstName=first_name,
         lastName=last_name,
         username = username,
         password = password,
         email=email
+=======
+        username=username,
+        password=password,
+        firstName=first_name,
+        lastName=last_name,
+        email=email,
+        adminID=admin_id
+>>>>>>> upstream/master
     )
     
     db.session.add(new_admin)
@@ -28,25 +47,28 @@ def create_admin(username, password, first_name, last_name, email):
     
     return admin_id
 
-#Function return admins
+# Function to get an admin by adminID
+def get_admin_by_id(admin_id):
+    return Admin.query.filter_by(adminID=admin_id).first()
+
+# Function to return all admins
 def get_all_admins():
     return Admin.query.all()
 
-#Function return admins as json
+# Function to return all admins as JSON
 def get_all_admins_json():
     return [admin.to_dict() for admin in Admin.query.all()]
 
-#Function to create a competition
-def create_competition(name, date_str, status, description):
+# Function to create a competition
+def create_competition(name, date_str, status, description, admin_id):
     competition_date = datetime.strptime(date_str, '%Y-%m-%d').date()
     
+    admin = get_admin_by_id(admin_id)
+    if not admin:
+        raise ValueError(f"Admin with ID {admin_id} not found.")
+    
     max_id = db.session.query(func.max(Competition.competitionID)).scalar()
-    
-    if max_id is None:
-        new_id_number = 1
-    else:
-        new_id_number = int(max_id[1:]) + 1
-    
+    new_id_number = 1 if max_id is None else int(max_id[1:]) + 1
     competition_id = f"C{new_id_number:03d}"
     
     new_competition = Competition(
@@ -55,7 +77,7 @@ def create_competition(name, date_str, status, description):
         date=competition_date,
         competitionType=status,
         description=description,
-        adminID=None 
+        adminID=admin_id  
     )
     
     db.session.add(new_competition)
@@ -63,7 +85,7 @@ def create_competition(name, date_str, status, description):
     
     return competition_id
 
-#Function to update the details of a competition
+# Function to update the details of a competition
 def update_competition_details(competition_id, **kwargs):
     competition = Competition.query.get(competition_id)
     if competition is None:
@@ -76,56 +98,94 @@ def update_competition_details(competition_id, **kwargs):
     db.session.commit()
     print(f"Competition {competition_id} updated successfully.")
 
-#Function to import results from a CSV file
+# Function to import results from a CSV file
 def import_results_from_file(file_path):
     try:
         with open(file_path, newline='') as csvfile:
             reader = csv.DictReader(csvfile)
+            students_created = set() 
+
             for row in reader:
-                result_id = row['resultID']
+                if 'studentID' in row:  
+                    student_id = row['studentID']
+                    username = row['username']
+                    password = row['password']
+                    first_name = row['first_name']
+                    last_name = row['last_name']
+                    email = row['email']
 
-                if db.session.query(Results).filter_by(resultID=result_id).first() is not None:
-                    print(f"Skipping duplicate resultID: {result_id}")
-                    continue 
+                    existing_student = db.session.query(Student).filter_by(studentID=student_id).first()
 
-                competition_id = row['competitionID']
-                student_id = row['studentID']
-                score = int(row['score'])
-                completion_time = row['completionTime']
-                ranking = int(row['ranking'])
-                competition_date = row['date']  
+                    if existing_student is not None or student_id in students_created:
+                        new_student_id = generate_new_student_id()  
+                        student_id = new_student_id
+                        print(f"Student ID {row['studentID']} already exists, assigning new ID: {student_id}")
 
-                competition = db.session.query(Competition).filter_by(competitionID=competition_id).first()
-                if competition is None:
-                    try:
-                        parsed_date = datetime.strptime(competition_date, "%Y-%m-%d").date()
-                    except ValueError:
-                        parsed_date = datetime.strptime("2024-01-01", "%Y-%m-%d").date()
-
-                    competition = Competition(
-                        competitionID=competition_id,
-                        title=row.get('name', 'Imported Competition'),
-                        date=parsed_date,
-                        description="Imported competition",
-                        competitionType=row.get('status', 'Closed'), 
-                        adminID=None 
+                    new_student = Student(
+                        username=username,
+                        password=password,
+                        firstName=first_name,
+                        lastName=last_name,
+                        email=email,
+                        studentID=student_id  
                     )
-                    db.session.add(competition)
-                    print(f"Imported new competition with ID: {competition_id}")
+                    db.session.add(new_student)
+                    students_created.add(student_id) 
+                    print(f"Created student with ID: {student_id}")
 
-                result = Results(
-                    resultID=result_id,
-                    competitionID=competition_id,
-                    studentID=student_id,
-                    score=score,
-                    completionTime=completion_time,
-                    ranking=ranking
-                )
-                
-                db.session.add(result)
-            
+                if 'resultID' in row:
+                    result_id = row['resultID']
+
+                    if db.session.query(Results).filter_by(resultID=result_id).first() is not None:
+                        print(f"Skipping duplicate resultID: {result_id}")
+                        continue 
+
+                    competition_id = row['competitionID']
+                    score = int(row['score'])
+                    completion_time = row['completionTime']
+                    ranking = int(row['ranking'])
+                    competition_date = row['date']
+
+                    competition = db.session.query(Competition).filter_by(competitionID=competition_id).first()
+                    if competition is None:
+                        try:
+                            parsed_date = datetime.strptime(competition_date, "%Y-%m-%d").date()
+                        except ValueError:
+                            parsed_date = datetime.strptime("2024-01-01", "%Y-%m-%d").date()
+
+                        competition = Competition(
+                            competitionID=competition_id,
+                            title=row.get('name', 'Imported Competition'),
+                            date=parsed_date,
+                            description="Imported competition",
+                            competitionType=row.get('status', 'Closed'), 
+                            adminID=None  
+                        )
+                        db.session.add(competition)
+                        print(f"Imported new competition with ID: {competition_id}")
+
+                    result = Results(
+                        resultID=result_id,
+                        competitionID=competition_id,
+                        studentID=student_id,
+                        score=score,
+                        completionTime=completion_time,
+                        ranking=ranking
+                    )
+
+                    db.session.add(result)
+
             db.session.commit()
-            print(f'Results imported from {file_path}')
+            print(f'Results and students imported from {file_path}')
     except Exception as e:
         print(f"An error occurred while importing results: {e}")
+
+# Helper Function to generate a new unique student ID
+def generate_new_student_id():
+    last_student = db.session.query(Student).order_by(Student.studentID.desc()).first()
+    if last_student is None:
+        return "S001" 
+    last_id = int(last_student.studentID[1:]) 
+    new_id = f"S{str(last_id + 1).zfill(3)}" 
+    return new_id
 
