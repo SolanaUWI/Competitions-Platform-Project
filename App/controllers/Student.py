@@ -2,7 +2,8 @@ from App.models import Student
 from App.models import Competition
 from App.models import Results
 from App.models import db
-
+from werkzeug.security import generate_password_hash
+from sqlalchemy.exc import IntegrityError
 #Function for creating a student
 # def create_student(username, password, first_name, last_name, email):
 #     student_id = f"S{len(Student.query.all()) + 1:03d}"
