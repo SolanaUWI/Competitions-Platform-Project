@@ -12,9 +12,6 @@ class Admin(User):
         super().__init__(username, password, user_type="admin", firstName=firstName, lastName=lastName, email=email)
         self.adminID = adminID  
 
-    def __init__(self, username, password, firstName, lastName, email):
-        super().__init__(username, password, user_type="admin", firstName=firstName, lastName=lastName, email=email)
-        
     def __repr__(self):
         return f'<Admin {self.adminID}>'
 

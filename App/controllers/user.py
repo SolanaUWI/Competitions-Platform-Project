@@ -1,16 +1,30 @@
 from App.models import User
 from App.database import db
-
+from werkzeug.security import generate_password_hash
 # def create_user(username, password):
 #     newuser = User(username=username, password=password)
 #     db.session.add(newuser)
 #     db.session.commit()
 #     return newuser
 
+# def create_user(username, password, firstName, lastName, email):
+#     new_user = User(
+#         username=username,
+#         password=password,  # Ensure you hash the password as needed
+#         user_type='user',  # Set the default user type
+#         firstName=firstName,  # Pass the first name
+#         lastName=lastName,  # Pass the last name
+#         email=email  # Pass the email
+#     )
+#     db.session.add(new_user)
+#     db.session.commit()
+#     return new_user
+
 def create_user(username, password, firstName, lastName, email):
+    hashed_password = generate_password_hash(password)  # Hash the password
     new_user = User(
         username=username,
-        password=password,  # Ensure you hash the password as needed
+        password=hashed_password,  # Use the hashed password
         user_type='user',  # Set the default user type
         firstName=firstName,  # Pass the first name
         lastName=lastName,  # Pass the last name
