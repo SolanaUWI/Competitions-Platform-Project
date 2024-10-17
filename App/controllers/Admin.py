@@ -6,37 +6,8 @@ from App.models import Admin, Competition, Results
 from App.models import db
 from werkzeug.security import generate_password_hash
 from sqlalchemy.exc import IntegrityError
+
 # Function to create an admin
-# def create_admin(username, password, first_name, last_name, email):
-#     existing_admin = Admin.query.filter_by(email=email).first()
-#     if existing_admin:
-#         raise ValueError(f"An admin with email '{email}' already exists.")
-    
-#     max_admin_id = db.session.query(func.max(Admin.adminID)).scalar()
-#     if max_admin_id is None:
-#         new_admin_id_number = 1
-#     else:
-#         new_admin_id_number = int(max_admin_id[1:]) + 1
-    
-#     admin_id = f"A{new_admin_id_number:03d}" 
-    
-
-#     new_admin = Admin(
-#         username=username,
-#         password=password,
-#         firstName=first_name,
-#         lastName=last_name,
-#         email=email,
-#         adminID=admin_id
-#     )
-    
-#     db.session.add(new_admin)
-#     db.session.commit()
-    
-#     return admin_id
-
-
-#new create admin
 def create_admin(username, password, first_name, last_name, email):
     # Check if admin with the same email already exists
     existing_admin = Admin.query.filter_by(email=email).first()

@@ -4,24 +4,8 @@ from App.models import Results
 from App.models import db
 from werkzeug.security import generate_password_hash
 from sqlalchemy.exc import IntegrityError
+
 #Function for creating a student
-# def create_student(username, password, first_name, last_name, email):
-#     student_id = f"S{len(Student.query.all()) + 1:03d}"
-    
-#     new_student = Student(
-#         username=username,
-#         password=password,
-#         firstName=first_name,
-#         lastName=last_name,
-#         email=email,
-#         studentID=student_id  # Pass the student ID to the constructor
-#     )
-
-#     db.session.add(new_student)
-#     db.session.commit()
-    
-#     return student_id
-
 def create_student(username, password, first_name, last_name, email):
     try:
         # Check if username or email already exists
