@@ -1,9 +1,10 @@
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import get_jwt_identity, jwt_required
 from App.controllers import (
     create_student, get_all_students_json, view_competitions,
     view_results, register_for_competition
 )
+from App.models.user import User
 
 student_views = Blueprint('student_views', __name__)
 
@@ -34,8 +35,15 @@ def get_all_students():
 @student_views.route('/student/<student_id>/competitions', methods=['GET'])
 @jwt_required()
 def student_view_competitions(student_id):
-    competitions = view_competitions(student_id)
-    return jsonify([competition.to_dict() for competition in competitions]), 200
+    identity = get_jwt_identity()  
+    user = User.query.get(identity)  
+
+    # Check if the user is a student
+    if user and user.user_type == 'student':
+        competitions = view_competitions(student_id)  
+        return jsonify([competition.to_dict() for competition in competitions]), 200
+    else:
+        return jsonify(message="Student access required"), 403  
 
 # View results for a specific student
 @student_views.route('/student/<student_id>/results', methods=['GET'])

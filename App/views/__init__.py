@@ -1,5 +1,6 @@
 # blue prints are imported 
 # explicitly instead of using *
+from .auth_views import auth_views
 from .user_views import user_views
 from .student_views import student_views
 from .admin_views import admin_views
@@ -13,6 +14,7 @@ views = [
     student_views,
     admin_views,
     competition_views,
-    results_views
+    results_views,
+    auth_views
 ]
 # blueprints must be added to this list

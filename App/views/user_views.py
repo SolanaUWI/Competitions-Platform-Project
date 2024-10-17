@@ -3,6 +3,7 @@ from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identi
 from App.controllers import (
     create_user, get_user_by_username, get_user, update_user
 )
+from App.models.user import User
 
 user_views = Blueprint('user_views', __name__)
 
@@ -38,11 +39,14 @@ def login():
 @user_views.route('/user', methods=['GET'])
 @jwt_required()
 def get_current_user():
-    identity = get_jwt_identity()
-    user = get_user(identity['id'])
+    identity = get_jwt_identity()  
+    user = User.query.get(identity)  
+
+    # Return user details if found
     if user:
-        return jsonify(user=user.get_json()), 200
-    return jsonify(message="User not found"), 404
+        return jsonify(user=user.get_json()), 200  
+    else:
+        return jsonify(message="User not found"), 404  
 
 # Update the current user's username
 @user_views.route('/user', methods=['PUT'])

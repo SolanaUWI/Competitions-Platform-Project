@@ -14,7 +14,7 @@ class Competition(db.Model):
     date = db.Column(db.Date, nullable=False)
     description = db.Column(db.String, nullable=True)
     competitionType = db.Column(db.String, nullable=False)
-    adminID = db.Column(db.String, db.ForeignKey('admin.adminID'), nullable=True)  # Reference Admin ID
+    adminID = db.Column(db.String, db.ForeignKey('admin.adminID'), nullable=True)  
 
     # Relationship with Student model
     participants = db.relationship('Student', secondary=competition_participants, back_populates='competitions')

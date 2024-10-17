@@ -11,30 +11,6 @@ from App.database import db
 
 competition_views = Blueprint('competition_views', __name__)
 
-# Admin creates a competition
-@competition_views.route('/admin/competition', methods=['POST'])
-@jwt_required()
-def create_competition():
-    data = request.get_json()
-    competition_id = generate_competition_id()
-    
-    new_competition = Competition(
-        competitionID=competition_id,
-        title=data['title'],
-        date=data['date'],
-        description=data.get('description'),
-        competitionType=data['competitionType'],
-        adminID=data['adminID']  # Make sure admin ID is provided
-    )
-    
-    try:
-        db.session.add(new_competition)
-        db.session.commit()
-        return jsonify({'message': 'Competition created', 'competitionID': competition_id}), 201
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'error': str(e)}), 400
-
 # Get details of a specific competition
 @competition_views.route('/competitions/<competition_id>', methods=['GET'])
 def get_competition(competition_id):
