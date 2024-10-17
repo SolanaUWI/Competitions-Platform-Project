@@ -34,5 +34,5 @@ class User(db.Model):
 
     __mapper_args__ = {
         "polymorphic_identity": "user",
-        "polymorphic_on": user_type,  # Updated reference to "user_type"
+        "polymorphic_on": user_type, 
     }

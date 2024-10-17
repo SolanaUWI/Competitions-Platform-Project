@@ -1,8 +1,11 @@
+import os
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import get_jwt_identity, jwt_required
 from App.controllers import (
     create_admin, get_all_admins_json, create_competition, update_competition_details
 )
+from App.controllers.Admin import import_results_from_file
+from App.models.user import User
 
 admin_views = Blueprint('admin_views', __name__)
 
@@ -33,18 +36,25 @@ def get_all_admins():
 @admin_views.route('/admin/competition', methods=['POST'])
 @jwt_required()
 def create_competition_view():
-    data = request.get_json()
-    try:
-        competition_id = create_competition(
-            name=data['title'],
-            date_str=data['date'],
-            status=data['competitionType'],
-            description=data.get('description'),
-            admin_id=data['adminID']
-        )
-        return jsonify(competition_id=competition_id), 201
-    except Exception as e:
-        return jsonify(error=str(e)), 400
+    identity = get_jwt_identity() 
+    user = User.query.get(identity)  
+
+    # Check if the user is an admin
+    if user and user.user_type == 'admin':
+        data = request.get_json() 
+        try:
+            competition_id = create_competition(
+                name=data['title'],
+                date_str=data['date'],
+                status=data['competitionType'],  
+                description=data.get('description'),
+                admin_id=user.id  
+            )
+            return jsonify({'competition_id': competition_id}), 201  
+        except Exception as e:
+            return jsonify({'error': str(e)}), 400  
+    else:
+        return jsonify({'message': 'Admin access required'}), 403   
 
 # Admin updates a competition
 @admin_views.route('/admin/competition/<competition_id>', methods=['PUT'])
@@ -61,3 +71,23 @@ def update_competition_view(competition_id):
         return jsonify(message=f"Competition {competition_id} updated successfully"), 200
     except Exception as e:
         return jsonify(error=str(e)), 400
+
+#Admin imports the results from the file   
+@admin_views.route('/admin/competition/results/import', methods=['POST'])
+@jwt_required()
+def import_results_view():
+    identity = get_jwt_identity()  
+    user = User.query.get(identity)  
+
+    # Check if the user is an admin
+    if user and user.user_type == 'admin':
+        # Define the path to the CSV file
+        file_path = 'Data/results.csv'
+
+        try:
+            import_results_from_file(file_path)  # Use the existing function to import results
+            return jsonify({'message': 'Results imported successfully'}), 201
+        except Exception as e:
+            return jsonify({'error': str(e)}), 400
+    else:
+        return jsonify({'message': 'Admin access required'}), 403

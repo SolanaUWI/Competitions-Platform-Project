@@ -8,9 +8,9 @@ def create_user(username, password, firstName, lastName, email):
         username=username,
         password=hashed_password,  # Use the hashed password
         user_type='user',  # Set the default user type
-        firstName=firstName,  # Pass the first name
-        lastName=lastName,  # Pass the last name
-        email=email  # Pass the email
+        firstName=firstName, 
+        lastName=lastName,  
+        email=email 
     )
     db.session.add(new_user)
     db.session.commit()

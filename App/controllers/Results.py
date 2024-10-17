@@ -23,10 +23,8 @@ def to_dict(self):
 def get_results_by_competition(competition_id):
     return Results.query.filter_by(competitionID=competition_id).all()
 
-#Function to process a file and update results (if necessary)
 def process_file(file_path):
-    import_results_from_file(file_path)  # Reuses the import logic
+    import_results_from_file(file_path) 
 
-#Function to get details of a specific result
 def get_result_details(result_id):
     return Results.query.get(result_id)
