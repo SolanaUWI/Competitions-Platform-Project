@@ -24,19 +24,3 @@ def get_competition(competition_id):
 def get_all_competitions():
     competitions = get_all_competitions_json()
     return jsonify(competitions), 200
-
-# Admin updates a competition
-@competition_views.route('/admin/competition/<competition_id>', methods=['PUT'])
-@jwt_required()
-def update_competition(competition_id):
-    data = request.get_json()
-    try:
-        update_competition_details(
-            competition_id,
-            name=data.get('title'),
-            date=data.get('date'),
-            status=data.get('competitionType')
-        )
-        return jsonify({'message': f'Competition {competition_id} updated successfully'}), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 400

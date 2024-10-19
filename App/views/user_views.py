@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
 from App.controllers import (
     create_user, get_user_by_username, get_user, update_user
@@ -21,19 +22,7 @@ def register_user():
         )
         return jsonify(user=user.get_json()), 201
     except Exception as e:
-        return jsonify(error=str(e)), 400
-
-# Login route
-@user_views.route('/login', methods=['POST'])
-def login():
-    data = request.get_json()
-    user = get_user_by_username(data['username'])
-
-    if user and user.check_password(data['password']):
-        access_token = create_access_token(identity={'id': user.id, 'username': user.username})
-        return jsonify(access_token=access_token), 200
-    else:
-        return jsonify(message="Invalid credentials"), 401
+        return jsonify(message="Username invalid or taken"), 400
 
 # Get details of the current logged-in user
 @user_views.route('/user', methods=['GET'])
@@ -42,20 +31,8 @@ def get_current_user():
     identity = get_jwt_identity()  
     user = User.query.get(identity)  
 
-    # Return user details if found
     if user:
         return jsonify(user=user.get_json()), 200  
     else:
         return jsonify(message="User not found"), 404  
 
-# Update the current user's username
-@user_views.route('/user', methods=['PUT'])
-@jwt_required()
-def update_user_view():
-    identity = get_jwt_identity()
-    data = request.get_json()
-    try:
-        update_user(identity['id'], data['username'])
-        return jsonify(message="User updated successfully"), 200
-    except Exception as e:
-        return jsonify(error=str(e)), 400

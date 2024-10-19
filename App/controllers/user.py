@@ -6,7 +6,7 @@ def create_user(username, password, firstName, lastName, email):
     hashed_password = generate_password_hash(password)  # Hash the password
     new_user = User(
         username=username,
-        password=hashed_password,  # Use the hashed password
+        password=hashed_password,  # Hashed password
         user_type='user',  # Set the default user type
         firstName=firstName, 
         lastName=lastName,  

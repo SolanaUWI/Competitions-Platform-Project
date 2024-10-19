@@ -20,7 +20,7 @@ def register_student():
             last_name=data['lastName'],
             email=data['email']
         )
-        return jsonify(student_id=student_id), 201
+        return jsonify(message=f"Student registered with ID: {student_id}"), 201  
     except Exception as e:
         return jsonify(error=str(e)), 400
 
@@ -29,28 +29,7 @@ def register_student():
 @jwt_required()
 def get_all_students():
     students = get_all_students_json()
-    return jsonify(students), 200
-
-# View competitions a student can join
-@student_views.route('/student/<student_id>/competitions', methods=['GET'])
-@jwt_required()
-def student_view_competitions(student_id):
-    identity = get_jwt_identity()  
-    user = User.query.get(identity)  
-
-    # Check if the user is a student
-    if user and user.user_type == 'student':
-        competitions = view_competitions(student_id)  
-        return jsonify([competition.to_dict() for competition in competitions]), 200
-    else:
-        return jsonify(message="Student access required"), 403  
-
-# View results for a specific student
-@student_views.route('/student/<student_id>/results', methods=['GET'])
-@jwt_required()
-def student_view_results(student_id):
-    results = view_results(student_id)
-    return jsonify([result.to_dict() for result in results]), 200
+    return jsonify(students), 200 
 
 # Register a student for a competition
 @student_views.route('/student/<student_id>/competition/<competition_id>', methods=['POST'])

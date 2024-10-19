@@ -19,9 +19,13 @@ class User(db.Model):
         self.email = email
 
     def get_json(self):
-        return{
+        return {
             'id': self.id,
-            'username': self.username
+            'username': self.username,
+            'user_type': self.user_type,
+            'firstName': self.firstName,
+            'lastName': self.lastName,    
+            'email': self.email           
         }
 
     def set_password(self, password):

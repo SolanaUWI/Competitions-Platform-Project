@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, jsonify, request, flash, redirect, url_for
-from flask_jwt_extended import jwt_required, unset_jwt_cookies, set_access_cookies, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, unset_jwt_cookies, set_access_cookies, get_jwt_identity
+from App.controllers import Admin, Student
 from App.controllers.auth import login 
 from App.models import User
+
 
 auth_views = Blueprint('auth_views', __name__, template_folder='../templates')
 
@@ -47,12 +49,13 @@ def user_login_api():
     set_access_cookies(response, token)  
     return response
 
+
 @auth_views.route('/api/identify', methods=['GET'])
 @jwt_required()  
 def identify_user():
     current_user_id = get_jwt_identity() 
     user = User.query.get(current_user_id)
-    return jsonify({'message': f"username: {user.username}, id: {user.id}"})
+    return jsonify({'message': f"username: {user.username}, user id: {user.id}"})
 
 @auth_views.route('/api/logout', methods=['GET'])
 def logout_api():

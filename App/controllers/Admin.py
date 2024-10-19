@@ -9,12 +9,10 @@ from sqlalchemy.exc import IntegrityError
 
 # Function to create an admin
 def create_admin(username, password, first_name, last_name, email):
-    # Check if admin with the same email already exists
     existing_admin = Admin.query.filter_by(email=email).first()
     if existing_admin:
         raise ValueError(f"An admin with email '{email}' already exists.")
     
-    # Generate a unique adminID in the format 'A001', 'A002', etc.
     max_admin_id = db.session.query(func.max(Admin.adminID)).scalar()
     if max_admin_id is None:
         new_admin_id_number = 1
@@ -23,10 +21,8 @@ def create_admin(username, password, first_name, last_name, email):
     
     admin_id = f"A{new_admin_id_number:03d}"
     
-    # Hash the password before storing it in the database
     hashed_password = generate_password_hash(password)
 
-    # Create a new Admin object with the hashed password
     new_admin = Admin(
         username=username,
         password=hashed_password,
